@@ -1,0 +1,253 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-cinzel);
+  --font-serif: var(--font-spectral);
+  --font-mono: var(--font-geist-mono);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  /* Cinematic accent tokens */
+  --color-moonlight: var(--moonlight);
+  --color-violet: var(--violet);
+  --color-silver: var(--silver);
+  --color-ink: var(--ink);
+}
+
+/*
+  Cinematic dark theme — inspired by Elden Ring / Hollow Knight atmosphere.
+  Deep black & charcoal backgrounds, muted silver text, moonlight blue and
+  subtle violet accents. This is the default (root) theme; the site is always dark.
+*/
+:root {
+  --radius: 0.5rem;
+
+  /* Core surfaces */
+  --background: oklch(0.135 0.012 270);        /* near-black, faint blue/violet */
+  --foreground: oklch(0.90 0.008 240);        /* muted silver */
+  --ink: oklch(0.06 0.008 270);               /* deepest black for vignettes */
+
+  --card: oklch(0.165 0.012 270);              /* charcoal */
+  --card-foreground: oklch(0.92 0.006 240);
+  --popover: oklch(0.16 0.014 270);
+  --popover-foreground: oklch(0.94 0.006 240);
+
+  /* Moonlight blue as primary */
+  --primary: oklch(0.80 0.045 240);            /* moonlight silver-blue */
+  --primary-foreground: oklch(0.13 0.012 270);
+
+  --secondary: oklch(0.215 0.012 270);
+  --secondary-foreground: oklch(0.90 0.008 240);
+
+  --muted: oklch(0.195 0.012 270);
+  --muted-foreground: oklch(0.66 0.014 240);
+
+  /* Subtle violet accent */
+  --accent: oklch(0.64 0.06 300);              /* soft violet */
+  --accent-foreground: oklch(0.96 0.005 240);
+
+  --destructive: oklch(0.62 0.18 25);
+
+  --border: oklch(1 0 0 / 8%);
+  --input: oklch(1 0 0 / 12%);
+  --ring: oklch(0.80 0.045 240);
+
+  /* Accent palette */
+  --moonlight: oklch(0.82 0.045 240);
+  --violet: oklch(0.66 0.06 300);
+  --silver: oklch(0.86 0.006 240);
+
+  --chart-1: oklch(0.80 0.045 240);
+  --chart-2: oklch(0.66 0.06 300);
+  --chart-3: oklch(0.70 0.02 200);
+  --chart-4: oklch(0.60 0.08 280);
+  --chart-5: oklch(0.50 0.04 260);
+
+  --sidebar: oklch(0.15 0.012 270);
+  --sidebar-foreground: oklch(0.90 0.008 240);
+  --sidebar-primary: oklch(0.80 0.045 240);
+  --sidebar-primary-foreground: oklch(0.13 0.012 270);
+  --sidebar-accent: oklch(0.215 0.012 270);
+  --sidebar-accent-foreground: oklch(0.92 0.006 240);
+  --sidebar-border: oklch(1 0 0 / 8%);
+  --sidebar-ring: oklch(0.80 0.045 240);
+}
+
+/* Keep a light variant available for completeness, though the site defaults to dark. */
+.dark {
+  --background: oklch(0.135 0.012 270);
+  --foreground: oklch(0.90 0.008 240);
+  --card: oklch(0.165 0.012 270);
+  --card-foreground: oklch(0.92 0.006 240);
+  --popover: oklch(0.16 0.014 270);
+  --popover-foreground: oklch(0.94 0.006 240);
+  --primary: oklch(0.80 0.045 240);
+  --primary-foreground: oklch(0.13 0.012 270);
+  --secondary: oklch(0.215 0.012 270);
+  --secondary-foreground: oklch(0.90 0.008 240);
+  --muted: oklch(0.195 0.012 270);
+  --muted-foreground: oklch(0.66 0.014 240);
+  --accent: oklch(0.64 0.06 300);
+  --accent-foreground: oklch(0.96 0.005 240);
+  --destructive: oklch(0.62 0.18 25);
+  --border: oklch(1 0 0 / 8%);
+  --input: oklch(1 0 0 / 12%);
+  --ring: oklch(0.80 0.045 240);
+  --moonlight: oklch(0.82 0.045 240);
+  --violet: oklch(0.66 0.06 300);
+  --silver: oklch(0.86 0.006 240);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "ss01", "cv01";
+    background-image:
+      radial-gradient(120% 80% at 50% -10%, oklch(0.20 0.02 270 / 0.5), transparent 60%),
+      radial-gradient(80% 60% at 100% 100%, oklch(0.16 0.03 300 / 0.18), transparent 55%);
+    background-attachment: fixed;
+  }
+  ::selection {
+    background: oklch(0.80 0.045 240 / 0.25);
+    color: oklch(0.96 0.006 240);
+  }
+}
+
+@layer components {
+  .font-display {
+    font-family: var(--font-cinzel), serif;
+    letter-spacing: 0.04em;
+  }
+  .font-serif-body {
+    font-family: var(--font-spectral), serif;
+  }
+
+  /* Eyebrow / kicker label above section titles */
+  .eyebrow {
+    @apply inline-flex items-center gap-2 text-xs uppercase tracking-[0.3em] text-moonlight/80;
+  }
+  .eyebrow::before {
+    content: "";
+    @apply inline-block h-px w-8 bg-moonlight/40;
+  }
+
+  /* Cinematic section heading */
+  .section-title {
+    @apply font-display text-3xl sm:text-4xl md:text-5xl text-foreground leading-tight;
+  }
+
+  /* Subtle hairline divider */
+  .hairline {
+    @apply h-px w-full bg-gradient-to-r from-transparent via-border to-transparent;
+  }
+
+  /* Card with glassy charcoal surface */
+  .surface {
+    @apply rounded-xl border border-border/70 bg-card/60 backdrop-blur-sm;
+  }
+
+  /* Atmospheric fog overlay */
+  .fog-overlay {
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      oklch(0.135 0.012 270 / 0.4) 55%,
+      oklch(0.135 0.012 270 / 0.95) 100%
+    );
+  }
+
+  /* Vignette */
+  .vignette {
+    background: radial-gradient(120% 100% at 50% 40%, transparent 40%, oklch(0.06 0.008 270 / 0.85) 100%);
+  }
+
+  /* Moonlight glow text */
+  .glow-moonlight {
+    text-shadow: 0 0 24px oklch(0.80 0.045 240 / 0.35);
+  }
+
+  /* Custom scrollbar */
+  .nice-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: oklch(0.4 0.02 270) transparent;
+  }
+  .nice-scroll::-webkit-scrollbar { width: 8px; height: 8px; }
+  .nice-scroll::-webkit-scrollbar-track { background: transparent; }
+  .nice-scroll::-webkit-scrollbar-thumb {
+    background: oklch(0.35 0.02 270 / 0.6);
+    border-radius: 9999px;
+  }
+  .nice-scroll::-webkit-scrollbar-thumb:hover {
+    background: oklch(0.5 0.03 240 / 0.8);
+  }
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.9; }
+}
+@keyframes scroll-hint {
+  0% { transform: translateY(0); opacity: 0; }
+  30% { opacity: 1; }
+  100% { transform: translateY(14px); opacity: 0; }
+}
+@keyframes fog-drift {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-3%); }
+}
+
+.animate-float-slow { animation: float-slow 6s ease-in-out infinite; }
+.animate-pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }
+.animate-scroll-hint { animation: scroll-hint 2.2s ease-in-out infinite; }
+.animate-fog-drift { animation: fog-drift 24s ease-in-out infinite alternate; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
+}
