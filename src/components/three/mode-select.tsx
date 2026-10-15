@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
 import {
   Compass,
   ScrollText,
@@ -18,6 +17,8 @@ import { profile } from "@/lib/portfolio-data";
  *  - Enter the 3D world (immersive)
  *  - Browse the 2D portfolio (fast, accessible)
  * The 3D option only enables after a quick WebGL availability check.
+ * Entrance animations use pure CSS (no framer-motion) to keep the initial
+ * route bundle light for memory-constrained dev environments.
  */
 export function ModeSelect() {
   const setMode = useExperience((s) => s.setMode);
@@ -25,12 +26,11 @@ export function ModeSelect() {
   const webglOk = useExperience((s) => s.webglOk);
   const [entering3d, setEntering3d] = useState(false);
 
+  // Detect WebGL availability once on mount (client-only).
   useEffect(() => {
-    // Detect WebGL availability
     try {
       const canvas = document.createElement("canvas");
-      const gl =
-        canvas.getContext("webgl2") || canvas.getContext("webgl");
+      const gl = canvas.getContext("webgl2") || canvas.getContext("webgl");
       setWebglOk(!!gl);
     } catch {
       setWebglOk(false);
@@ -63,43 +63,35 @@ export function ModeSelect() {
       />
 
       <div className="mx-auto flex min-h-[100dvh] max-w-6xl flex-col items-center justify-center px-4 py-20 text-center">
-        <motion.span
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
+        <span
           className="eyebrow justify-center text-moonlight/80"
+          style={{ animation: "enterRise 0.7s ease-out both" }}
         >
           Senthil Kumaran · Game Developer · Environment Artist
-        </motion.span>
+        </span>
 
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.1 }}
+        <h1
           className="mt-6 font-display text-5xl leading-[1.05] tracking-[0.04em] text-foreground sm:text-6xl md:text-7xl"
+          style={{ animation: "enterRise 0.9s ease-out both", animationDelay: "0.1s" }}
         >
           ENTER THE
           <br />
           <span className="glow-moonlight text-moonlight">MOONLIT WORLD</span>
-        </motion.h1>
+        </h1>
 
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.2 }}
+        <p
           className="mt-7 max-w-2xl font-serif-body text-lg leading-relaxed text-muted-foreground sm:text-xl"
+          style={{ animation: "enterRise 0.9s ease-out both", animationDelay: "0.2s" }}
         >
           An interactive 3D portfolio of {profile.tagline} Walk stone paths
           through an ancient world and discover my work — or browse the
           traditional portfolio.
-        </motion.p>
+        </p>
 
         {/* Choice cards */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.3 }}
+        <div
           className="mt-12 grid w-full max-w-3xl gap-4 sm:grid-cols-2"
+          style={{ animation: "enterRise 0.9s ease-out both", animationDelay: "0.3s" }}
         >
           {/* 3D — primary */}
           <button
@@ -167,18 +159,17 @@ export function ModeSelect() {
               <ArrowRight className="size-3.5 transition-transform group-hover:translate-x-1" />
             </div>
           </button>
-        </motion.div>
+        </div>
 
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.9, delay: 0.5 }}
+        <p
           className="mt-10 flex items-center gap-2 text-[10px] uppercase tracking-[0.3em] text-muted-foreground"
+          style={{ animation: "enterRise 0.9s ease-out both", animationDelay: "0.5s" }}
         >
           <Gamepad2 className="size-3.5" />
           Switch between modes anytime from the menu
-        </motion.p>
+        </p>
       </div>
     </div>
   );
 }
+

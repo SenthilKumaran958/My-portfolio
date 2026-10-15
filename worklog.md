@@ -100,3 +100,33 @@ Stage Summary:
 - Honesty preserved: placeholder links, AI concept labels, no fabricated URLs/features
 - Accessibility: 2D mode as full alternative, keyboard nav (WASD/E/Escape), reduced-motion respected, WebGL fallback to 2D
 - Lint clean, dev server healthy on port 3000, zero runtime errors
+
+---
+Task ID: 11-12
+Agent: main
+Task: Fix dev server OOM, fix mouse-look, improve environment, add UE5 gallery, update links
+
+Work Log:
+- ROOT CAUSE of server instability: `bun run dev` script used `| tee dev.log` — a SIGPIPE from tee killed the whole process group whenever the next-server worker respawned (HMR/compile). Changed package.json dev script to `next dev -p 3000 > dev.log 2>&1` (redirect, no pipe). This single fix restored full stability — mode-select now serves unlimited requests.
+- Mouse-look fix (the critical bug): the original R3F controller listened for mousemove but NOTHING ever called canvas.requestPointerLock(). Fixed by rewriting the 3D experience with raw three.js (no R3F, which also removed the heavy @react-three/fiber bundle that was OOMing Turbopack). The new raw-three-experience.tsx:
+  * onCanvasClick → raycasts for beacon clicks, otherwise calls canvas.requestPointerLock()
+  * onLockChange → updates store.pointerLocked
+  * onMouseMove → reads movementX/Y to rotate camera (only when locked, not when menu/panel open)
+  * Escape exits pointer lock (browser default); menu/panel open calls document.exitPointerLock()
+  * Fallback: if pointer lock denied, click-and-drag dispatches custom events the controller reads
+- three.js loaded from CDN (cdnjs) at runtime via src/lib/three-loader.ts to keep it out of the Turbopack bundle graph entirely (the bundled three.js OOM'd the compiler).
+- Removed framer-motion from mode-select + all 3D-chunk HUD files (replaced with CSS keyframe animations: enterRise, overlayFade, promptRise, navOpen) to reduce the compile graph.
+- Lazy-loaded BOTH Experience3D and Portfolio2D so heavy chunks only compile when entering that mode.
+- Lazy-loaded DestinationPanel so it only compiles when a destination is opened.
+- Environment upgrade (raw-three-experience.tsx ~700 lines): individual paving slabs with cracks, carved pillars (base+shaft+capital), 3 destination gateways with accent glow, approach lanterns (warm point lights), monumental temple with staircase + facade columns + broken pediment + cella walls + braziers, trees with canopies, grass tufts, noise-deformed natural mountains, gradient starfield sky dome, moon with 4-layer halo, PBR materials with procedural canvas noise textures (512px, cracks, moss patches, grain) + procedural normal/bump maps, cinematic lighting (key moonlight + cool fill + warm hemisphere), fog. VLM rating improved 3/10 → 7/10 ("cohesive, professional composition, palpable mood").
+- Honest limitation: browser-based procedural Three.js reads as stylized/low-poly, not photorealistic UE5 quality. The user should supply Blender-exported GLB models to reach true AAA fidelity.
+- UE5 gallery: added ueProjects + ueSpaces data (5 projects: ancient India gopuram, dark-fantasy fortress, Lumen lighting study, terrain pass, blockout-to-final) with honest kind labels (Experiment/WIP/Completed), workflow steps, placeholder-render warnings. New src/components/portfolio/unreal-environments.tsx section added to 2D portfolio between Environment Art and Level Design. Added "Unreal Engine" nav link. 3D Environment Art destination panel got a "View UE5 Gallery" pointer that switches to 2D + scrolls to the section.
+- Links updated: github.com/SenthilKumaran958, god-arts.itch.io/shadow-blade (Play Game button now LIVE/enabled), linkedin.com/in/senthil-kumaran-a4744a3a9. Godot 4.7 (was "Godot Engine"). Source/gameplay video buttons honestly marked "Coming soon".
+
+Stage Summary:
+- Dev server stable (tee pipe fix was the root cause)
+- 3D renders with atmosphere (157 unique colors, 378KB screenshot, VLM 7/10)
+- Mouse-look: click-to-lock pointer lock + movementX/Y rotation + Escape release + menu-pause + drag fallback (verified in code; headless browser can't test real user-gesture pointer lock)
+- UE5 gallery live in 2D portfolio with 5 honest projects
+- All real links set; Play Game button live
+- Lint clean; dev log clean (200s only, 0 500s)

@@ -91,6 +91,7 @@ function buildScene(
     antialias: true,
     alpha: false,
     powerPreference: "high-performance",
+    preserveDrawingBuffer: true,
   });
   renderer.setSize(width, height);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.8));
@@ -126,7 +127,8 @@ function buildScene(
   scene.add(fill);
   scene.add(new THREE.HemisphereLight(0x202428, 0x140c08, 0.25));
 
-  // Procedural canvas textures
+  // Procedural canvas textures — generated to read as worn, weathered stone
+  // with visible grain, cracks, and color variation (not flat primitives).
   const makeNoiseTexture = (
     base: [number, number, number],
     variance: number,
@@ -134,49 +136,123 @@ function buildScene(
     detail = 5,
   ) => {
     const c = document.createElement("canvas");
-    c.width = c.height = 256;
+    c.width = c.height = 512;
     const ctx = c.getContext("2d")!;
+    // Base fill
     ctx.fillStyle = `rgb(${base[0]},${base[1]},${base[2]})`;
-    ctx.fillRect(0, 0, 256, 256);
+    ctx.fillRect(0, 0, 512, 512);
+    // Large blotches (worn patches / discoloration)
     for (let i = 0; i < detail * 30; i++) {
-      const r = 15 + Math.random() * 70;
-      const v = (Math.random() - 0.5) * variance;
+      const r = 25 + Math.random() * 120;
+      const v = (Math.random() - 0.5) * variance * 1.4;
       const col = [
         Math.max(0, Math.min(255, base[0] + v)),
         Math.max(0, Math.min(255, base[1] + v)),
         Math.max(0, Math.min(255, base[2] + v)),
       ];
-      ctx.fillStyle = `rgba(${col[0]},${col[1]},${col[2]},0.25)`;
+      ctx.fillStyle = `rgba(${col[0]},${col[1]},${col[2]},0.3)`;
       ctx.beginPath();
-      ctx.arc(Math.random() * 256, Math.random() * 256, r, 0, Math.PI * 2);
+      ctx.arc(Math.random() * 512, Math.random() * 512, r, 0, Math.PI * 2);
       ctx.fill();
     }
-    for (let i = 0; i < 256 * 256 * 0.02; i++) {
-      const v = (Math.random() - 0.5) * variance;
+    // Darker mossy patches near the bottom of the texture (weathering)
+    for (let i = 0; i < detail * 8; i++) {
+      const r = 30 + Math.random() * 90;
+      const x = Math.random() * 512;
+      const y = 200 + Math.random() * 312;
+      ctx.fillStyle = `rgba(${Math.max(0, base[0] - 30)},${Math.max(0, base[1] - 10)},${Math.max(0, base[2] - 25)},0.25)`;
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    // Fine grain speckle
+    for (let i = 0; i < 512 * 512 * 0.03; i++) {
+      const v = (Math.random() - 0.5) * variance * 1.5;
       const col = [
         Math.max(0, Math.min(255, base[0] + v)),
         Math.max(0, Math.min(255, base[1] + v)),
         Math.max(0, Math.min(255, base[2] + v)),
       ];
-      ctx.fillStyle = `rgba(${col[0]},${col[1]},${col[2]},0.4)`;
-      ctx.fillRect(Math.random() * 256, Math.random() * 256, 1.5, 1.5);
+      ctx.fillStyle = `rgba(${col[0]},${col[1]},${col[2]},0.5)`;
+      ctx.fillRect(Math.random() * 512, Math.random() * 512, 2, 2);
+    }
+    // Crack lines (jagged dark strokes)
+    ctx.strokeStyle = `rgba(${Math.max(0, base[0] - 50)},${Math.max(0, base[1] - 50)},${Math.max(0, base[2] - 50)},0.55)`;
+    ctx.lineWidth = 1 + Math.random();
+    for (let i = 0; i < detail * 4; i++) {
+      ctx.beginPath();
+      let x = Math.random() * 512;
+      let y = Math.random() * 512;
+      ctx.moveTo(x, y);
+      const segs = 4 + Math.floor(Math.random() * 5);
+      for (let s = 0; s < segs; s++) {
+        x += (Math.random() - 0.5) * 80;
+        y += (Math.random() - 0.5) * 80;
+        ctx.lineTo(x, y);
+      }
+      ctx.stroke();
     }
     const tex = new THREE.CanvasTexture(c);
     tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
     tex.repeat.set(repeat, repeat);
+    tex.anisotropy = 4;
     return tex;
   };
 
+  // Bump/normal-ish map from speckled gradients (gives surfaces visible relief
+  // under the raking moonlight without needing external normal map images).
+  const makeBumpTexture = (strength = 0.7) => {
+    const c = document.createElement("canvas");
+    c.width = c.height = 256;
+    const ctx = c.getContext("2d")!;
+    ctx.fillStyle = "rgb(128,128,255)";
+    ctx.fillRect(0, 0, 256, 256);
+    for (let i = 0; i < 256 * 256 * 0.04; i++) {
+      const dx = (Math.random() - 0.5) * 70 * strength;
+      const dy = (Math.random() - 0.5) * 70 * strength;
+      ctx.fillStyle = `rgb(${128 + dx},${128 + dy},255)`;
+      ctx.fillRect(Math.random() * 256, Math.random() * 256, 2, 2);
+    }
+    // A few crack normals
+    ctx.strokeStyle = "rgb(90,90,255)";
+    ctx.lineWidth = 1.5;
+    for (let i = 0; i < 6; i++) {
+      ctx.beginPath();
+      let x = Math.random() * 256;
+      let y = Math.random() * 256;
+      ctx.moveTo(x, y);
+      for (let s = 0; s < 5; s++) {
+        x += (Math.random() - 0.5) * 60;
+        y += (Math.random() - 0.5) * 60;
+        ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+    }
+    const tex = new THREE.CanvasTexture(c);
+    tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+    return tex;
+  };
+
+  const floorBump = makeBumpTexture(0.8);
+  const wallBump = makeBumpTexture(0.6);
+  const pillarBump = makeBumpTexture(0.5);
+
   const matFloor = new THREE.MeshStandardMaterial({
     map: makeNoiseTexture([58, 60, 70], 26, 8, 6),
+    normalMap: floorBump,
+    normalScale: new THREE.Vector2(0.7, 0.7),
     roughness: 0.95, metalness: 0, color: 0x9a9ca6,
   });
   const matWall = new THREE.MeshStandardMaterial({
     map: makeNoiseTexture([62, 64, 74], 28, 4, 5),
+    normalMap: wallBump,
+    normalScale: new THREE.Vector2(0.6, 0.6),
     roughness: 0.92, metalness: 0, color: 0x8a8c96,
   });
   const matPillar = new THREE.MeshStandardMaterial({
     map: makeNoiseTexture([78, 80, 90], 24, 2, 5),
+    normalMap: pillarBump,
+    normalScale: new THREE.Vector2(0.5, 0.5),
     roughness: 0.85, metalness: 0.05, color: 0xa6a8b2,
   });
   const matCapital = new THREE.MeshStandardMaterial({

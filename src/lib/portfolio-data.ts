@@ -253,6 +253,163 @@ export const artworks: Artwork[] = [
   },
 ];
 
+/* ------------------------------------------------------------------ */
+/* Unreal Engine Environments — dedicated UE5 showcase                  */
+/* ------------------------------------------------------------------ */
+
+export type UEProjectKind = "Experiment" | "Work in Progress" | "Completed";
+
+export type UEProject = {
+  id: string;
+  title: string;
+  kind: UEProjectKind;
+  // One of: ancient-india | dark-fantasy | lighting | terrain | blockout-to-final
+  space:
+    | "ancient-india"
+    | "dark-fantasy"
+    | "lighting"
+    | "terrain"
+    | "blockout-to-final";
+  image: string;
+  shortDescription: string;
+  longDescription: string;
+  workflow: string[];
+  software: string[];
+  // Whether real renders/screenshots/video have been supplied yet
+  hasRealAssets: boolean;
+};
+
+export const ueSpaces = [
+  {
+    id: "ancient-india",
+    label: "Ancient Indian Kingdoms & Temples",
+    description:
+      "Environment pieces exploring historical Indian temple architecture, gopurams, and carved stonework as real-time UE5 scenes.",
+  },
+  {
+    id: "dark-fantasy",
+    label: "Dark Fantasy Fortresses & Ruined Landscapes",
+    description:
+      "Brooding fortresses, ruined landscapes, and atmospheric dark-fantasy world-building.",
+  },
+  {
+    id: "lighting",
+    label: "Real-Time Lighting & Atmosphere",
+    description:
+      "Lumen GI experiments, virtual shadow maps, volumetric fog, and time-of-day studies.",
+  },
+  {
+    id: "terrain",
+    label: "Terrain Creation & Composition",
+    description:
+      "Landscape sculpting, foliage, material blending, and environmental composition.",
+  },
+  {
+    id: "blockout-to-final",
+    label: "Blockout-to-Final Development",
+    description:
+      "Showing the same environment from greybox blockout through to a finished, lit scene.",
+  },
+] as const;
+
+export const ueProjects: UEProject[] = [
+  {
+    id: "ue-temple-gopuram",
+    title: "Gopuram at Dawn",
+    kind: "Work in Progress",
+    space: "ancient-india",
+    image: "/images/env-indian-kingdom.jpg",
+    shortDescription:
+      "A towering South Indian temple gateway studied in Unreal Engine 5, exploring silhouette, scale, and golden-hour Lumen lighting.",
+    longDescription:
+      "An in-progress environment study of a South Indian temple gopuram. The goal is to capture the monumental scale and intricate carved-stone silhouette under warm dawn light, using Lumen global illumination for soft bounced light in the deep niches. Currently a blockout with placeholder textures — final carved detail and material work is ongoing.",
+    workflow: [
+      "Reference gathered from historical temple photography for proportions and silhouette.",
+      "Blockout in UE5 with modular stone pieces to test scale and the main sightline.",
+      "Lumen + directional light tuned for golden-hour bounced light (in progress).",
+      "Next: high-poly carved detail in Blender, Nanite-friendly import, final materials.",
+    ],
+    software: ["Unreal Engine 5", "Blender (planned)", "Lumen"],
+    hasRealAssets: false,
+  },
+  {
+    id: "ue-fortress-ruin",
+    title: "Where the Fortress Sits",
+    kind: "Experiment",
+    space: "dark-fantasy",
+    image: "/images/env-dark-fantasy.jpg",
+    shortDescription:
+      "A dark-fantasy ruined fortress on a storm-lit ridge — atmosphere-first composition with Lumen and volumetric fog.",
+    longDescription:
+      "A dark-fantasy environment experiment: a distant, crumbling fortress silhouetted against a brooding sky. The focus is mood and atmosphere over fine detail — using Lumen, volumetric fog, and a single dominant light break to tell a story of a long-abandoned stronghold. An experiment, not a finished environment.",
+    workflow: [
+      "Established three-layer depth (foreground rocks, midground ridge, distant fortress).",
+      "Volumetric fog tuned so the fortress reads as a silhouette against a faint moonlight break.",
+      "Palette limited to charcoal, slate, and a single subtle violet accent.",
+      "Lumen GI used for soft ambient fill in shadowed areas.",
+    ],
+    software: ["Unreal Engine 5", "Lumen", "Volumetric Fog"],
+    hasRealAssets: false,
+  },
+  {
+    id: "ue-lumen-study",
+    title: "Lumen Lighting Study",
+    kind: "Experiment",
+    space: "lighting",
+    image: "/images/env-moonlit.jpg",
+    shortDescription:
+      "A focused study of Lumen global illumination and virtual shadow maps in a simple moonlit interior.",
+    longDescription:
+      "A lighting experiment in a simple interior scene, isolating Lumen GI and virtual shadow maps. The goal is to understand how Lumen bounces cool moonlight through an open archway and how virtual shadows resolve contact detail on stone. An active learning exercise, not a finished piece.",
+    workflow: [
+      "Built a single-room blockout with one arched opening as the only light source.",
+      "Lumen enabled; emissive moon disc as the key light, no manual fill.",
+      "Virtual shadow maps tuned for contact shadow quality on near stone.",
+      "Documented bounce intensity vs. perceived mood for future scenes.",
+    ],
+    software: ["Unreal Engine 5", "Lumen", "Virtual Shadow Maps"],
+    hasRealAssets: false,
+  },
+  {
+    id: "ue-terrain-pass",
+    title: "Mountain Pass — Terrain Study",
+    kind: "Work in Progress",
+    space: "terrain",
+    image: "/images/env-unreal5.jpg",
+    shortDescription:
+      "A UE5 landscape terrain study exploring sculpting, material blending, and foliage on a rocky mountain pass.",
+    longDescription:
+      "A terrain-focused environment in progress: a rocky mountain pass sculpted with the UE5 landscape tool, with layered materials (rock, grass, dirt) blended by height and slope, and sparse foliage. Currently testing material blending; foliage and final lighting are ongoing.",
+    workflow: [
+      "Landscape sculpted with erosion-style noise for natural ridges and gullies.",
+      "Landscape material blends three layers (rock / dirt / grass) by slope and height.",
+      "Foliage tool tested with a few grass and rock meshes (placeholder assets).",
+      "Next: custom foliage models in Blender, distance fog tuning, final Lumen pass.",
+    ],
+    software: ["Unreal Engine 5", "Landscape Tools", "Material Editor"],
+    hasRealAssets: false,
+  },
+  {
+    id: "ue-blockout-to-final",
+    title: "Blockout to Final — Temple Interior",
+    kind: "Work in Progress",
+    space: "blockout-to-final",
+    image: "/images/env-temple-ruins.jpg",
+    shortDescription:
+      "Showing the same temple interior from greybox blockout through to a lit, detailed scene — documenting the full process.",
+    longDescription:
+      "A process-focused project: the same temple interior shown at the blockout stage and at the (in-progress) final stage. The goal is to demonstrate the full blockout-to-final workflow — proving out gameplay paths, scale, and sightlines first, then layering art, lighting, and atmosphere without changing the underlying layout. Final art is still in progress.",
+    workflow: [
+      "Blockout: modular pieces set the layout, camera, and sightline first.",
+      "Greybox playthrough to confirm the path feels good before any art is made.",
+      "Art pass: replacing greybox with carved stone meshes from Blender (in progress).",
+      "Lighting + atmosphere pass with Lumen and volumetric fog (planned).",
+    ],
+    software: ["Unreal Engine 5", "Blender", "Lumen"],
+    hasRealAssets: false,
+  },
+];
+
 export const levelDesign = {
   intro:
     "I design playable spaces before I decorate them. Every level starts as a greybox where I test movement, pacing, and readability — only then do I layer environment art, lighting, and storytelling on top.",

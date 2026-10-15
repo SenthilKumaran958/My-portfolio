@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import {
   X,
   Eye,
@@ -166,14 +165,11 @@ function DestinationPrompt() {
   }, [nearby, openPanel]);
 
   return (
-    <AnimatePresence>
+    <>
       {dest ? (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 20 }}
-          transition={{ duration: 0.25 }}
-          className="pointer-events-none absolute bottom-24 left-1/2 -translate-x-1/2 sm:bottom-20"
+        <div
+          className="pointer-events-none absolute bottom-24 left-1/2 sm:bottom-20"
+          style={{ animation: "promptRise 0.25s ease-out" }}
         >
           <button
             onClick={() => openPanel(dest.id)}
@@ -195,9 +191,9 @@ function DestinationPrompt() {
             </span>
             <Hand className="size-4 text-moonlight" />
           </button>
-        </motion.div>
+        </div>
       ) : null}
-    </AnimatePresence>
+    </>
   );
 }
 
@@ -342,14 +338,11 @@ function InstructionOverlay() {
   );
 
   return (
-    <AnimatePresence>
+    <>
       {!seen ? (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.4 }}
+        <div
           className="pointer-events-auto absolute inset-0 z-40 flex items-center justify-center bg-ink/80 backdrop-blur-sm"
+          style={{ animation: "overlayFade 0.4s ease-out" }}
           onClick={() => setSeen(true)}
         >
           <div className="mx-4 max-w-md rounded-2xl border border-border/70 bg-background/90 p-6 text-center sm:p-8">
@@ -357,7 +350,7 @@ function InstructionOverlay() {
               <Eye className="size-5" />
             </span>
             <h2 className="mt-4 font-display text-xl tracking-[0.15em] text-foreground">
-              ENTER THE MOONLIT WORLD
+              Enter The Moonlit World
             </h2>
             <p className="mt-3 font-serif-body text-sm leading-relaxed text-muted-foreground">
               An explorable 3D environment. Walk the stone paths to discover three
@@ -392,9 +385,9 @@ function InstructionOverlay() {
               Tip: click anywhere to dismiss
             </p>
           </div>
-        </motion.div>
+        </div>
       ) : null}
-    </AnimatePresence>
+    </>
   );
 }
 

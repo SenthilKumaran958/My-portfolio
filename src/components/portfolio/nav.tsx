@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 const NAV_LINKS = [
   { label: "Shadow Blade", href: "#shadow-blade" },
   { label: "Environment Art", href: "#environment-art" },
+  { label: "Unreal Engine", href: "#unreal-environments" },
   { label: "Level Design", href: "#level-design" },
   { label: "Skills", href: "#skills" },
   { label: "About", href: "#about" },

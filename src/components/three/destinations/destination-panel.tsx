@@ -244,6 +244,33 @@ function EnvArtPanel() {
           Concept pieces are AI-assisted explorations used as reference, not finished
           environments I personally modeled. Finished environments and blockouts are my own 3D work.
         </p>
+
+        {/* UE5 gallery pointer */}
+        <div className="mt-6 flex items-center justify-between gap-4 rounded-xl border border-border/70 bg-card/40 p-5">
+          <div className="flex-1">
+            <h3 className="font-display text-base tracking-wide text-foreground">
+              Unreal Engine 5 Environments
+            </h3>
+            <p className="mt-1 text-sm text-muted-foreground">
+              A dedicated UE5 + Blender showcase: ancient Indian temples, dark-fantasy
+              fortresses, lighting studies, terrain, and blockout-to-final workflows.
+            </p>
+          </div>
+          <button
+            onClick={() => {
+              useExperience.getState().setMode("2d");
+              setTimeout(() => {
+                document
+                  .getElementById("unreal-environments")
+                  ?.scrollIntoView({ behavior: "smooth", block: "start" });
+              }, 280);
+            }}
+            className="inline-flex shrink-0 items-center gap-1.5 rounded-md bg-moonlight px-4 py-2.5 text-xs uppercase tracking-[0.18em] text-background transition-colors hover:bg-moonlight/90"
+          >
+            View UE5 Gallery
+            <ArrowUpRight className="size-3.5" />
+          </button>
+        </div>
       </div>
 
       <EnvDetailDialog art={detail} onClose={() => setDetail(null)} />

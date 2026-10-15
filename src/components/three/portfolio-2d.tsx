@@ -7,6 +7,7 @@ import { Nav } from "@/components/portfolio/nav";
 import { Hero } from "@/components/portfolio/hero";
 import { FeaturedProject } from "@/components/portfolio/featured-project";
 import { EnvironmentGallery } from "@/components/portfolio/environment-gallery";
+import { UnrealEnvironments } from "@/components/portfolio/unreal-environments";
 import { LevelDesign } from "@/components/portfolio/level-design";
 import { Skills } from "@/components/portfolio/skills";
 import { About } from "@/components/portfolio/about";
@@ -43,6 +44,7 @@ export function Portfolio2D() {
         <Hero />
         <FeaturedProject />
         <EnvironmentGallery />
+        <UnrealEnvironments />
         <LevelDesign />
         <Skills />
         <About />
