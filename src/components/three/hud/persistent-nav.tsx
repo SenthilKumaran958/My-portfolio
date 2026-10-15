@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Compass, Gamepad2 } from "lucide-react";
 import { useExperience } from "@/store/experience";
@@ -35,7 +35,14 @@ export function PersistentNav() {
   const mode = useExperience((s) => s.mode);
   const setMode = useExperience((s) => s.setMode);
   const openPanel = useExperience((s) => s.openPanel);
+  const setMenuOpen = useExperience((s) => s.setMenuOpen);
   const [open, setOpen] = useState(false);
+
+  // Keep the store's menuOpen in sync so the camera controller knows to pause
+  // mouse-look while the menu is open.
+  useEffect(() => {
+    setMenuOpen(open);
+  }, [open, setMenuOpen]);
 
   const handleItem = (item: { id: string; kind?: "destination" | "jump" }) => {
     if (mode === "3d") {

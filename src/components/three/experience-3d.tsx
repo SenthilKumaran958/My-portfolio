@@ -1,71 +1,56 @@
 "use client";
 
-import { Suspense, useRef, useEffect } from "react";
-import { Canvas } from "@react-three/fiber";
-import { Fog } from "three";
-import { EffectComposer, Vignette } from "@react-three/postprocessing";
-import { CameraController } from "./camera-controller";
-import {
-  WorldGeometry,
-  WorldLighting,
-  SkyDome,
-  Moon,
-} from "./world/world-geometry";
-import { DestinationMarkers } from "./world/destination-markers";
+import { useRef, useEffect } from "react";
+import { RawThreeExperience } from "./raw-three-experience";
 import { HUD } from "./hud/hud";
 import { PersistentNav } from "./hud/persistent-nav";
 import { LoadingScreen } from "./hud/loading-screen";
 import { DestinationPanel } from "./destinations/destination-panel";
 import { useExperience } from "@/store/experience";
 
+/**
+ * 3D experience wrapper. The actual three.js scene is built imperatively in
+ * RawThreeExperience (plain three.js, no React Three Fiber) to keep the
+ * bundle light enough for memory-constrained environments. The HUD, nav,
+ * destination panels, and loading screen are React overlays on top.
+ */
 export function Experience3D() {
   const joystickRef = useRef({ x: 0, y: 0 });
   const lookRef = useRef({ x: 0, y: 0 });
   const loaded = useExperience((s) => s.loaded);
   const setLoaded = useExperience((s) => s.setLoaded);
   const quality = useExperience((s) => s.quality);
+  // Shared ref the raw-three experience fills with its tick function so we
+  // can drive the render loop from outside (stable across re-renders).
+  const tickRef = useRef<(() => void) | null>(null);
 
   useEffect(() => {
-    // Mark loaded after first frame settles (also acts as fallback timer)
+    let raf = 0;
+    const loop = () => {
+      tickRef.current?.();
+      raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+
+  useEffect(() => {
     const t = setTimeout(() => setLoaded(true), 1600);
     return () => clearTimeout(t);
   }, [setLoaded]);
 
-  const reduced = quality === "reduced";
+  // Reduced-quality hint (read by raw-three via the store)
+  void quality;
 
   return (
-    <div className="relative h-[100dvh] w-full overflow-hidden bg-ink">
-      <Canvas
-        shadows={!reduced}
-        dpr={reduced ? [1, 1] : [1, 1.8]}
-        gl={{
-          antialias: !reduced,
-          powerPreference: "high-performance",
-          alpha: false,
-        }}
-        camera={{ fov: 70, near: 0.1, far: 120, position: [0, 1.6, 2] }}
-        onCreated={({ scene, gl }) => {
-          scene.fog = new Fog(0x14161f, 12, 55);
-          gl.setClearColor(0x0a0b12, 1);
-        }}
-        className="absolute inset-0"
-      >
-        <Suspense fallback={null}>
-          <WorldLighting />
-          <SkyDome />
-          <Moon />
-          <WorldGeometry />
-          <DestinationMarkers />
-          <CameraController joystickRef={joystickRef} lookRef={lookRef} />
-          {!reduced ? (
-            <EffectComposer>
-              <Vignette eskil={false} offset={0.25} darkness={0.85} />
-            </EffectComposer>
-          ) : null}
-        </Suspense>
-      </Canvas>
+    <div className="relative h-[100dvh] w-full overflow-hidden bg-black">
+      <RawThreeExperience
+        joystickRef={joystickRef}
+        lookRef={lookRef}
+        tickRef={tickRef}
+      />
 
-      {/* HUD overlay */}
+      {/* HUD overlay (pointer-events-none except interactive bits) */}
       <HUD joystickRef={joystickRef} lookRef={lookRef} />
       <PersistentNav />
 

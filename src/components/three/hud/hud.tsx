@@ -15,6 +15,7 @@ import {
 import { DESTINATIONS, useExperience } from "@/store/experience";
 import { cn } from "@/lib/utils";
 import { HudLabels } from "./hud-labels";
+import { PointerLockLayer } from "./pointer-lock-layer";
 
 export function HUD({
   joystickRef,
@@ -24,16 +25,20 @@ export function HUD({
   lookRef: React.MutableRefObject<{ x: number; y: number }>;
 }) {
   return (
-    <div className="pointer-events-none absolute inset-0 z-30 select-none">
-      <HudLabels />
-      <Crosshair />
-      <TopBar />
-      <Minimap />
-      <DestinationPrompt />
-      <ControlsHint />
-      <MobileControls joystickRef={joystickRef} lookRef={lookRef} />
-      <InstructionOverlay />
-    </div>
+    <>
+      {/* Click-to-lock backdrop sits below interactive HUD so buttons still work */}
+      <PointerLockLayer />
+      <div className="pointer-events-none absolute inset-0 z-30 select-none">
+        <HudLabels />
+        <Crosshair />
+        <TopBar />
+        <Minimap />
+        <DestinationPrompt />
+        <ControlsHint />
+        <MobileControls joystickRef={joystickRef} lookRef={lookRef} />
+        <InstructionOverlay />
+      </div>
+    </>
   );
 }
 

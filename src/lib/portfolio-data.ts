@@ -17,12 +17,12 @@ export const profile = {
   heroSubtitle:
     "I'm a game developer and aspiring environment artist focused on gameplay systems, atmospheric worlds, and immersive interactive experiences.",
   heroImage: "/images/hero.jpg",
-  // PLACEHOLDER: replace with your real handle/links
+  // Personal links (replace email/resume with your own when ready)
   links: {
-    github: "https://github.com/your-handle", // PLACEHOLDER
-    itch: "https://your-handle.itch.io", // PLACEHOLDER
-    linkedin: "https://www.linkedin.com/in/your-handle", // PLACEHOLDER
-    email: "senthil.kumaran@example.com", // PLACEHOLDER
+    github: "https://github.com/SenthilKumaran958",
+    itch: "https://god-arts.itch.io/shadow-blade",
+    linkedin: "https://www.linkedin.com/in/senthil-kumaran-a4744a3a9",
+    email: "senthil.kumaran@example.com", // PLACEHOLDER — replace with your email
     resume: "#", // PLACEHOLDER — add a /resume.pdf in /public when ready
     resumeAvailable: false,
   },
@@ -32,18 +32,18 @@ export const featuredProject = {
   slug: "shadow-blade",
   title: "Shadow Blade",
   subtitle: "An original 2D action-platformer",
-  engine: "Godot Engine",
+  engine: "Godot 4.7",
   language: "GDScript",
   genre: "2D Action-Platformer",
   status: "In Development",
   cover: "/images/shadow-blade-cover.jpg",
   overview:
-    "Shadow Blade is an original 2D action-platformer I am developing in Godot Engine using GDScript. It follows a lone wanderer moving through ruined, moonlit temples and forgotten caverns. The focus is on tight platforming, deliberate combat, and environmental storytelling — letting the world itself communicate what happened before the player arrived.",
-  // Links — each marked available until you supply a real URL.
+    "Shadow Blade is an original 2D action-platformer I am developing in Godot 4.7 using GDScript. It follows a lone wanderer moving through ruined, moonlit temples and forgotten caverns. The focus is on tight platforming, deliberate combat, and environmental storytelling — letting the world itself communicate what happened before the player arrived.",
+  // Real links — Play is live on itch.io. Source and gameplay video coming soon.
   links: {
-    play: { href: "#", label: "Play Game", available: false }, // PLACEHOLDER — itch.io page
-    source: { href: "#", label: "View Source Code", available: false }, // PLACEHOLDER — GitHub repo
-    gameplay: { href: "#", label: "Watch Gameplay", available: false }, // PLACEHOLDER — YouTube / video
+    play: { href: "https://god-arts.itch.io/shadow-blade", label: "Play Game", available: true },
+    source: { href: "https://github.com/SenthilKumaran958", label: "View Source Code", available: false }, // repo-specific link coming soon
+    gameplay: { href: "#", label: "Watch Gameplay", available: false }, // video coming soon
   },
   screenshots: [
     {
@@ -85,7 +85,7 @@ export const featuredProject = {
     },
     {
       title: "My Contributions, Tools & Technologies",
-      body: "Shadow Blade is a solo project: design, programming, level layout, and visual direction are all mine. Built in Godot Engine with GDScript, version-controlled with Git and GitHub, with gameplay iteration tracked through a dev journal. Art and audio assets are a mix of my own work and placeholder references being replaced as the project matures.",
+      body: "Shadow Blade is a solo project: design, programming, level layout, and visual direction are all mine. Built in Godot 4.7 with GDScript, version-controlled with Git and GitHub, with gameplay iteration tracked through a dev journal. Art and audio assets are a mix of my own work and placeholder references being replaced as the project matures.",
     },
   ],
 } as const;
@@ -300,7 +300,7 @@ export const skillGroups: SkillGroup[] = [
     title: "Game Development",
     level: "Production-ready",
     items: [
-      "Godot Engine",
+      "Godot 4.7",
       "GDScript",
       "Gameplay mechanics",
       "2D platforming",

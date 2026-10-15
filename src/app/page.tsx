@@ -1,10 +1,18 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, lazy, Suspense } from "react";
 import { useExperience } from "@/store/experience";
 import { ModeSelect } from "@/components/three/mode-select";
-import { Experience3D } from "@/components/three/experience-3d";
-import { Portfolio2D } from "@/components/three/portfolio-2d";
+
+// Dynamically import BOTH the 3D experience and the 2D portfolio so the
+// heavy bundles (three.js / recharts / react-syntax-highlighter) only load
+// when actually needed. This keeps the initial mode-select compile light.
+const Experience3D = lazy(() =>
+  import("@/components/three/experience-3d").then((m) => ({ default: m.Experience3D })),
+);
+const Portfolio2D = lazy(() =>
+  import("@/components/three/portfolio-2d").then((m) => ({ default: m.Portfolio2D })),
+);
 
 export default function Home() {
   const mode = useExperience((s) => s.mode);
@@ -14,7 +22,6 @@ export default function Home() {
   // If WebGL is unavailable, never offer 3D — auto-redirect to 2D.
   useEffect(() => {
     if (webglOk === false && mode === "select") {
-      // Keep on select screen but the 3D option will be disabled + auto-advance to 2D after a moment
       const t = setTimeout(() => setMode("2d"), 2200);
       return () => clearTimeout(t);
     }
@@ -32,7 +39,19 @@ export default function Home() {
     };
   }, [mode]);
 
-  if (mode === "3d") return <Experience3D />;
-  if (mode === "2d") return <Portfolio2D />;
+  if (mode === "3d") {
+    return (
+      <Suspense fallback={<div className="min-h-screen bg-black" />}>
+        <Experience3D />
+      </Suspense>
+    );
+  }
+  if (mode === "2d") {
+    return (
+      <Suspense fallback={<div className="min-h-screen bg-background" />}>
+        <Portfolio2D />
+      </Suspense>
+    );
+  }
   return <ModeSelect />;
 }

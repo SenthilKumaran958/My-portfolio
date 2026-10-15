@@ -21,21 +21,21 @@ export const DESTINATIONS: DestinationInfo[] = [
     id: "game-development",
     name: "Game Development",
     subtitle: "Shadow Blade — a 2D action-platformer in Godot",
-    position: [-9, 0, -6],
+    position: [-11, 0, -18],
     color: "#9bb8d6",
   },
   {
     id: "environment-art",
     name: "Environment Art",
     subtitle: "Worlds in progress — Blender & UE5 studies",
-    position: [0, 0, -14],
+    position: [0, 0, -26],
     color: "#b9a6d6",
   },
   {
     id: "level-design",
     name: "Level Design",
     subtitle: "Blockouts, paths, and environmental storytelling",
-    position: [9, 0, -6],
+    position: [11, 0, -18],
     color: "#8fc6c9",
   },
 ];
@@ -46,9 +46,16 @@ type ExperienceState = {
   nearbyDestination: DestinationId | null;
   quality: Quality;
   panelOpen: boolean;
+  menuOpen: boolean;
   instructionsSeen: boolean;
   webglOk: boolean | null;
   loaded: boolean;
+  /** Whether pointer-lock is currently acquired (drives mouse-look). */
+  pointerLocked: boolean;
+  /** Whether pointer lock was denied / unavailable (show fallback). */
+  pointerLockDenied: boolean;
+  /** Mouse sensitivity multiplier (default 1). */
+  sensitivity: number;
 
   setMode: (m: ExperienceMode) => void;
   setActiveDestination: (d: DestinationId | null) => void;
@@ -56,9 +63,13 @@ type ExperienceState = {
   setQuality: (q: Quality) => void;
   openPanel: (d: DestinationId) => void;
   closePanel: () => void;
+  setMenuOpen: (v: boolean) => void;
   setInstructionsSeen: (v: boolean) => void;
   setWebglOk: (v: boolean | null) => void;
   setLoaded: (v: boolean) => void;
+  setPointerLocked: (v: boolean) => void;
+  setPointerLockDenied: (v: boolean) => void;
+  setSensitivity: (v: number) => void;
 };
 
 const prefersReducedMotion =
@@ -71,9 +82,13 @@ export const useExperience = create<ExperienceState>((set) => ({
   nearbyDestination: null,
   quality: prefersReducedMotion ? "reduced" : "high",
   panelOpen: false,
+  menuOpen: false,
   instructionsSeen: false,
   webglOk: null,
   loaded: false,
+  pointerLocked: false,
+  pointerLockDenied: false,
+  sensitivity: 1,
 
   setMode: (m) =>
     set({
@@ -81,14 +96,27 @@ export const useExperience = create<ExperienceState>((set) => ({
       activeDestination: null,
       nearbyDestination: null,
       panelOpen: false,
+      menuOpen: false,
+      pointerLocked: false,
     }),
   setActiveDestination: (d) => set({ activeDestination: d }),
   setNearbyDestination: (d) => set({ nearbyDestination: d }),
   setQuality: (q) => set({ quality: q }),
   openPanel: (d) =>
-    set({ activeDestination: d, panelOpen: true, instructionsSeen: true }),
+    set({
+      activeDestination: d,
+      panelOpen: true,
+      menuOpen: false,
+      instructionsSeen: true,
+      pointerLocked: false,
+    }),
   closePanel: () => set({ panelOpen: false, activeDestination: null }),
+  setMenuOpen: (v) =>
+    set((s) => ({ menuOpen: v, pointerLocked: v ? false : s.pointerLocked })),
   setInstructionsSeen: (v) => set({ instructionsSeen: v }),
   setWebglOk: (v) => set({ webglOk: v }),
   setLoaded: (v) => set({ loaded: v }),
+  setPointerLocked: (v) => set({ pointerLocked: v }),
+  setPointerLockDenied: (v) => set({ pointerLockDenied: v }),
+  setSensitivity: (v) => set({ sensitivity: v }),
 }));
