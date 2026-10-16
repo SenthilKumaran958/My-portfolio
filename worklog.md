@@ -266,3 +266,26 @@ Stage Summary:
 - Photo is now a larger perfect circle with a glowing ring in nav + footer
 - All plain text in the nav is now clearly visible against the dark gradient backdrop
 - Lint clean; no console errors
+
+---
+Task ID: 20
+Agent: main
+Task: Add richer theme-based background animations
+
+Work Log:
+- Rewrote src/components/portfolio/ambient-background.tsx with much richer, thematic animations for the cinematic dark-fantasy / moonlit-ruins theme:
+  * The Moon: a large drifting disc (10vw, min 90px) with multi-layer halo (outer 34vw + inner 20vw) that pulses, plus soft god rays (light shafts) pointing downward. Moon drifts horizontally over 60s.
+  * 33 particles total: 10 warm embers (orange-gold, rising), 16 cool dust motes (silver-blue, rising), 7 fireflies (warm-yellow, drifting + pulsing opacity)
+  * 3 drifting fog wisps at different vertical positions/speeds (48s, 64s, 90s)
+  * 2 aurora-like color washes (violet + teal) that slowly shift position/opacity (26s, 34s), using mix-blend-screen
+  * Distant mountain silhouettes at the bottom with slow parallax (80s)
+  * Twinkling starfield (upper 55vh, 10 star points)
+  * Slowly shifting gradient base (bgHue 32s) + pulsing moonlight glow
+- Added 8 new keyframes to globals.css: moonDrift, moonHalo, godRays, auroraA, auroraB, fireflyDrift, fogDriftC, mountainParallax
+- Moved moon from top:8% to top:16% and made it bigger so it's visible below the nav (was hidden behind the 64px nav)
+- All animations respect prefers-reduced-motion (become static)
+
+Stage Summary:
+- Background now has a visible drifting moon with halo + god rays, 33 mixed particles (embers/dust/fireflies), 3 fog layers, aurora color washes, mountain silhouettes, starfield
+- VLM confirmed on skills section: "moon, floating particles, color washes, fog/atmospheric haze, dark atmospheric night sky"
+- Lint clean; no console errors; fits the cinematic dark-fantasy game portfolio theme
