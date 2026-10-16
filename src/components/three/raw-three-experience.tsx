@@ -109,8 +109,8 @@ function buildScene(
   camera.position.set(0, EYE_HEIGHT, 6);
 
   // Lighting
-  scene.add(new THREE.AmbientLight(MOONLIGHT, 0.32));
-  const keyLight = new THREE.DirectionalLight(MOONLIGHT, 1.4);
+  scene.add(new THREE.AmbientLight(MOONLIGHT, 0.28));
+  const keyLight = new THREE.DirectionalLight(MOONLIGHT, 1.6);
   keyLight.position.set(14, 28, -10);
   keyLight.castShadow = true;
   keyLight.shadow.mapSize.set(2048, 2048);
@@ -121,11 +121,12 @@ function buildScene(
   keyLight.shadow.camera.near = 0.1;
   keyLight.shadow.camera.far = 90;
   keyLight.shadow.bias = -0.0004;
+  keyLight.shadow.normalBias = 0.02;
   scene.add(keyLight);
-  const fill = new THREE.DirectionalLight(0x5a6a90, 0.35);
+  const fill = new THREE.DirectionalLight(0x5a6a90, 0.4);
   fill.position.set(-18, 10, 8);
   scene.add(fill);
-  scene.add(new THREE.HemisphereLight(0x202428, 0x140c08, 0.25));
+  scene.add(new THREE.HemisphereLight(0x202428, 0x140c08, 0.3));
 
   // Procedural canvas textures — generated to read as worn, weathered stone
   // with visible grain, cracks, and color variation (not flat primitives).
@@ -240,20 +241,20 @@ function buildScene(
   const matFloor = new THREE.MeshStandardMaterial({
     map: makeNoiseTexture([58, 60, 70], 26, 8, 6),
     normalMap: floorBump,
-    normalScale: new THREE.Vector2(0.7, 0.7),
-    roughness: 0.95, metalness: 0, color: 0x9a9ca6,
+    normalScale: new THREE.Vector2(1.0, 1.0),
+    roughness: 0.92, metalness: 0, color: 0x9a9ca6,
   });
   const matWall = new THREE.MeshStandardMaterial({
     map: makeNoiseTexture([62, 64, 74], 28, 4, 5),
     normalMap: wallBump,
-    normalScale: new THREE.Vector2(0.6, 0.6),
-    roughness: 0.92, metalness: 0, color: 0x8a8c96,
+    normalScale: new THREE.Vector2(0.9, 0.9),
+    roughness: 0.9, metalness: 0, color: 0x8a8c96,
   });
   const matPillar = new THREE.MeshStandardMaterial({
     map: makeNoiseTexture([78, 80, 90], 24, 2, 5),
     normalMap: pillarBump,
-    normalScale: new THREE.Vector2(0.5, 0.5),
-    roughness: 0.85, metalness: 0.05, color: 0xa6a8b2,
+    normalScale: new THREE.Vector2(0.8, 0.8),
+    roughness: 0.82, metalness: 0.05, color: 0xa6a8b2,
   });
   const matCapital = new THREE.MeshStandardMaterial({
     map: makeNoiseTexture([96, 96, 104], 18, 1, 4),
@@ -261,11 +262,15 @@ function buildScene(
   });
   const matRubble = new THREE.MeshStandardMaterial({
     map: makeNoiseTexture([54, 56, 64], 30, 1, 6),
-    roughness: 1, metalness: 0, color: 0x7a7c86, flatShading: true,
+    normalMap: makeBumpTexture(0.6),
+    normalScale: new THREE.Vector2(0.5, 0.5),
+    roughness: 1, metalness: 0, color: 0x7a7c86,
   });
   const matMountain = new THREE.MeshStandardMaterial({
     map: makeNoiseTexture([44, 46, 56], 34, 6, 8),
-    roughness: 1, metalness: 0, color: 0x6a6c78, flatShading: true,
+    normalMap: makeBumpTexture(0.7),
+    normalScale: new THREE.Vector2(0.6, 0.6),
+    roughness: 1, metalness: 0, color: 0x6a6c78,
   });
   const matMoss = new THREE.MeshStandardMaterial({
     map: makeNoiseTexture([52, 66, 52], 26, 2, 5),
@@ -300,6 +305,22 @@ function buildScene(
   );
   ground.rotation.x = -Math.PI / 2;
 
+  // Ground-hugging fog layer (a large transparent plane that catches the
+  // moonlight and reads as low-lying mist for atmospheric depth).
+  const fogPlane = new THREE.Mesh(
+    new THREE.PlaneGeometry(80, 80),
+    new THREE.MeshBasicMaterial({
+      color: 0x2a3142,
+      transparent: true,
+      opacity: 0.18,
+      depthWrite: false,
+      fog: false,
+    }),
+  );
+  fogPlane.rotation.x = -Math.PI / 2;
+  fogPlane.position.set(0, 0.4, -10);
+  scene.add(fogPlane);
+
   // Courtyard paving slabs
   for (let ix = -5; ix <= 5; ix++) {
     for (let iz = -2; iz <= 6; iz++) {
@@ -330,16 +351,41 @@ function buildScene(
   const carvedPillar = (x: number, z: number) => {
     const g = new THREE.Group();
     g.position.set(x, 0, z);
-    const base = new THREE.Mesh(new THREE.BoxGeometry(0.95, 0.3, 0.95), matCapital);
-    base.position.y = 0.15; base.castShadow = base.receiveShadow = true; g.add(base);
-    const base2 = new THREE.Mesh(new THREE.BoxGeometry(0.78, 0.12, 0.78), matWall);
-    base2.position.y = 0.4; base2.castShadow = base2.receiveShadow = true; g.add(base2);
-    const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.34, 0.38, 3.0, 8, 6), matPillar);
+    // Square plinth base (two tiers)
+    const base = new THREE.Mesh(new THREE.BoxGeometry(1.0, 0.35, 1.0), matCapital);
+    base.position.y = 0.175; base.castShadow = base.receiveShadow = true; g.add(base);
+    const base2 = new THREE.Mesh(new THREE.BoxGeometry(0.82, 0.14, 0.82), matWall);
+    base2.position.y = 0.42; base2.castShadow = base2.receiveShadow = true; g.add(base2);
+    // Decorative torus ring above base
+    const baseRing = new THREE.Mesh(new THREE.TorusGeometry(0.4, 0.06, 8, 16), matCapital);
+    baseRing.position.y = 0.5; baseRing.rotation.x = Math.PI / 2; baseRing.castShadow = true; g.add(baseRing);
+    // Fluted shaft: main cylinder + 8 thin vertical grooves (fluting)
+    const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.34, 0.38, 3.0, 16, 8), matPillar);
     shaft.position.y = 2.0; shaft.castShadow = shaft.receiveShadow = true; g.add(shaft);
-    const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.4, 0.5, 8), matCapital);
-    cap.position.y = 3.5; cap.castShadow = cap.receiveShadow = true; g.add(cap);
-    const capTop = new THREE.Mesh(new THREE.BoxGeometry(0.95, 0.12, 0.95), matCapital);
-    capTop.position.y = 3.78; capTop.castShadow = capTop.receiveShadow = true; g.add(capTop);
+    for (let f = 0; f < 8; f++) {
+      const a = (f / 8) * Math.PI * 2;
+      const flute = new THREE.Mesh(
+        new THREE.BoxGeometry(0.04, 2.8, 0.12),
+        new THREE.MeshStandardMaterial({ color: 0x8a8c96, roughness: 0.9, metalness: 0 }),
+      );
+      flute.position.set(Math.cos(a) * 0.36, 2.0, Math.sin(a) * 0.36);
+      flute.rotation.y = a;
+      flute.castShadow = false;
+      g.add(flute);
+    }
+    // Capital: bell-shaped echinus + abacus
+    const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.6, 0.42, 0.5, 12), matCapital);
+    cap.position.y = 3.55; cap.castShadow = cap.receiveShadow = true; g.add(cap);
+    const capRing = new THREE.Mesh(new THREE.TorusGeometry(0.5, 0.05, 8, 16), matCapital);
+    capRing.position.y = 3.82; capRing.rotation.x = Math.PI / 2; g.add(capRing);
+    const capTop = new THREE.Mesh(new THREE.BoxGeometry(1.0, 0.16, 1.0), matCapital);
+    capTop.position.y = 3.95; capTop.castShadow = capTop.receiveShadow = true; g.add(capTop);
+    // Moss at the base (weathering)
+    const moss = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.5, 0.5, 0.08, 12),
+      new THREE.MeshStandardMaterial({ color: 0x3a4a34, roughness: 1, transparent: true, opacity: 0.7 }),
+    );
+    moss.position.y = 0.36; g.add(moss);
     return g;
   };
 
@@ -444,6 +490,143 @@ function buildScene(
   }
   scene.add(temple);
 
+  // ---- Weathered statues (flanking the approach to the temple) ----
+  const statue = (x: number, z: number, facing: number) => {
+    const g = new THREE.Group();
+    g.position.set(x, 0, z);
+    g.rotation.y = facing;
+    // Pedestal (two tiers)
+    const ped1 = new THREE.Mesh(new THREE.BoxGeometry(1.4, 0.4, 1.4), matCapital);
+    ped1.position.y = 0.2; ped1.castShadow = ped1.receiveShadow = true; g.add(ped1);
+    const ped2 = new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.3, 1.1), matWall);
+    ped2.position.y = 0.55; ped2.castShadow = ped2.receiveShadow = true; g.add(ped2);
+    // Seated figure: torso (tapered cylinder), head (sphere), broken arm
+    const torso = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.5, 1.2, 8), matCapital);
+    torso.position.y = 1.35; torso.castShadow = torso.receiveShadow = true; g.add(torso);
+    // Crossed legs (wider base of the figure)
+    const legs = new THREE.Mesh(new THREE.BoxGeometry(1.0, 0.5, 0.8), matCapital);
+    legs.position.set(0, 0.95, 0.1); legs.castShadow = legs.receiveShadow = true; g.add(legs);
+    // Head (broken/eroded — slightly tilted)
+    const head = new THREE.Mesh(new THREE.SphereGeometry(0.28, 12, 12), matCapital);
+    head.position.set(0.05, 2.15, 0); head.rotation.z = 0.15; head.castShadow = true; g.add(head);
+    // One surviving arm (the other broken off)
+    const arm = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.12, 0.7, 6), matCapital);
+    arm.position.set(0.4, 1.4, 0.1); arm.rotation.z = -0.4; arm.castShadow = true; g.add(arm);
+    // Broken shoulder on the other side (jagged stump)
+    const stump = new THREE.Mesh(new THREE.CylinderGeometry(0.14, 0.18, 0.25, 6), matRubble);
+    stump.position.set(-0.35, 1.7, 0); stump.rotation.z = 0.3; g.add(stump);
+    // Moss on the pedestal
+    const moss = new THREE.Mesh(
+      new THREE.BoxGeometry(1.5, 0.05, 1.5),
+      new THREE.MeshStandardMaterial({ color: 0x3a4a34, roughness: 1, transparent: true, opacity: 0.6 }),
+    );
+    moss.position.y = 0.42; g.add(moss);
+    return g;
+  };
+  // Two statues flanking the central path near the temple approach
+  scene.add(statue(-4, -14, 0.1));
+  scene.add(statue(4, -14, -0.1));
+
+  // ---- Broken freestanding archway (a landmark on the right side) ----
+  const brokenArch = new THREE.Group();
+  brokenArch.position.set(7, 0, -12);
+  brokenArch.rotation.y = -0.3;
+  // Left pillar (intact)
+  const archLP = carvedPillar(0, 0);
+  archLP.position.set(-1.6, 0, 0);
+  brokenArch.add(archLP);
+  // Right pillar (broken — shorter)
+  const rpBase = new THREE.Mesh(new THREE.BoxGeometry(1.0, 0.35, 1.0), matCapital);
+  rpBase.position.set(1.6, 0.175, 0); rpBase.castShadow = rpBase.receiveShadow = true; brokenArch.add(rpBase);
+  const rpShaft = new THREE.Mesh(new THREE.CylinderGeometry(0.34, 0.38, 1.8, 12, 6), matPillar);
+  rpShaft.position.set(1.6, 1.3, 0); rpShaft.castShadow = rpShaft.receiveShadow = true; brokenArch.add(rpShaft);
+  // Broken top of right pillar (jagged)
+  const rpBreak = new THREE.Mesh(new THREE.ConeGeometry(0.4, 0.5, 6), matRubble);
+  rpBreak.position.set(1.6, 2.35, 0); rpBreak.castShadow = true; brokenArch.add(rpBreak);
+  // Curved arch top (only left half survives)
+  const archCurve = new THREE.Mesh(new THREE.TorusGeometry(1.6, 0.18, 8, 16, Math.PI), matWall);
+  archCurve.position.set(0, 4.0, 0); archCurve.castShadow = archCurve.receiveShadow = true; brokenArch.add(archCurve);
+  // Keystones hanging (one remaining)
+  const keystone = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.5, 0.4), matCapital);
+  keystone.position.set(-0.8, 3.8, 0); keystone.castShadow = true; brokenArch.add(keystone);
+  scene.add(brokenArch);
+
+  // ---- Foreground rock formations (natural, not just background mountains) ----
+  const rockFormation = (x: number, z: number, scale: number, seed: number) => {
+    const g = new THREE.Group();
+    g.position.set(x, 0, z);
+    g.scale.setScalar(scale);
+    g.rotation.y = seed;
+    // Main boulder (deformed icosahedron)
+    const boulder = new THREE.Mesh(
+      new THREE.IcosahedronGeometry(1.2, 1),
+      matMountain,
+    );
+    boulder.position.y = 0.8;
+    boulder.castShadow = boulder.receiveShadow = true;
+    // Deform vertices for natural shape
+    const pos = boulder.geometry.attributes.position;
+    const v = new THREE.Vector3();
+    for (let i = 0; i < pos.count; i++) {
+      v.fromBufferAttribute(pos, i);
+      const n = Math.sin(v.x * 2 + seed) * 0.2 + Math.cos(v.y * 1.7 + seed) * 0.15;
+      v.multiplyScalar(1 + n);
+      pos.setXYZ(i, v.x, v.y, v.z);
+    }
+    boulder.geometry.computeVertexNormals();
+    g.add(boulder);
+    // Smaller rocks around
+    for (let i = 0; i < 4; i++) {
+      const a = (i / 4) * Math.PI * 2 + seed;
+      const r = 1.0 + Math.random() * 0.4;
+      const small = new THREE.Mesh(
+        new THREE.IcosahedronGeometry(0.3 + Math.random() * 0.2, 0),
+        matMountain,
+      );
+      small.position.set(Math.cos(a) * r, 0.25, Math.sin(a) * r);
+      small.rotation.set(Math.random(), Math.random(), Math.random());
+      small.castShadow = small.receiveShadow = true;
+      g.add(small);
+    }
+    return g;
+  };
+  scene.add(rockFormation(-5, 1, 1.0, 0.5));
+  scene.add(rockFormation(5.5, 1.5, 0.8, 2.1));
+  scene.add(rockFormation(-7, -8, 1.1, 1.3));
+  scene.add(rockFormation(8.5, -9, 0.9, 3.4));
+
+  // ---- Hanging vines from the gateway arches ----
+  const hangingVine = (x: number, y: number, z: number, len: number) => {
+    const g = new THREE.Group();
+    g.position.set(x, y, z);
+    // A few draped segments
+    const segs = 5;
+    for (let i = 0; i < segs; i++) {
+      const seg = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.03, 0.04, len / segs, 5),
+        matWood,
+      );
+      const sway = Math.sin(i * 0.7) * 0.08;
+      seg.position.set(sway, -(i + 0.5) * (len / segs), 0);
+      g.add(seg);
+      // Leaf cluster
+      if (i === segs - 1 || i === Math.floor(segs / 2)) {
+        const leaf = new THREE.Mesh(
+          new THREE.IcosahedronGeometry(0.18, 0),
+          new THREE.MeshStandardMaterial({ color: 0x2e3e28, roughness: 1, flatShading: true }),
+        );
+        leaf.position.set(sway + 0.1, -(i + 1) * (len / segs) + 0.1, 0.05);
+        g.add(leaf);
+      }
+    }
+    return g;
+  };
+  // Vines hanging from the central gateway arch
+  scene.add(hangingVine(-1, 3.4, -26, 1.5));
+  scene.add(hangingVine(1, 3.4, -26, 1.2));
+  // Vines from the broken arch
+  scene.add(hangingVine(5.4, 3.8, -12, 1.8));
+
   // Trees
   const treePositions: { pos: [number, number, number]; scale: number }[] = [
     { pos: [-6, 0, 4], scale: 1.1 },
@@ -466,13 +649,49 @@ function buildScene(
     scene.add(g);
   }
 
+  // ---- Scattered fallen masonry / rubble (environmental storytelling) ----
+  const rubblePositions: { pos: [number, number, number]; rot: number; size: [number, number, number] }[] = [
+    { pos: [-3, 0.2, -8], rot: 0.3, size: [1.4, 0.6, 0.9] },
+    { pos: [3, 0.2, -9], rot: -0.5, size: [1.2, 0.5, 0.7] },
+    { pos: [-2, 0.15, -16], rot: 0.1, size: [1.0, 0.4, 0.6] },
+    { pos: [2.5, 0.2, -16], rot: -0.2, size: [1.3, 0.55, 0.8] },
+    { pos: [-9, 0.15, -14], rot: 0.8, size: [1.1, 0.45, 0.7] },
+    { pos: [9, 0.18, -14], rot: -0.6, size: [1.0, 0.4, 0.65] },
+    { pos: [0, 0.15, -4], rot: 0.4, size: [0.9, 0.35, 0.55] },
+    { pos: [-4, 0.15, 0], rot: -0.3, size: [1.0, 0.4, 0.6] },
+    { pos: [4, 0.15, 0], rot: 0.5, size: [0.95, 0.38, 0.6] },
+  ];
+  for (const r of rubblePositions) {
+    const block = new THREE.Mesh(
+      new THREE.BoxGeometry(r.size[0], r.size[1], r.size[2]),
+      matRubble,
+    );
+    block.position.set(r.pos[0], r.pos[1] + r.size[1] / 2, r.pos[2]);
+    block.rotation.set(0.15, r.rot, 0.1);
+    block.castShadow = block.receiveShadow = true;
+    scene.add(block);
+  }
+
+  // ---- Moss patches on the ground (weathering) ----
+  for (let i = 0; i < 16; i++) {
+    const a = (i / 16) * Math.PI * 2;
+    const r = 4 + (i % 4) * 1.2;
+    const moss = new THREE.Mesh(
+      new THREE.CircleGeometry(0.6 + (i % 3) * 0.2, 12),
+      new THREE.MeshStandardMaterial({ color: 0x3a4a34, roughness: 1, transparent: true, opacity: 0.55 }),
+    );
+    moss.rotation.x = -Math.PI / 2;
+    moss.position.set(Math.cos(a) * r, 0.02, Math.sin(a) * r - 3);
+    scene.add(moss);
+  }
+
   // Mountains (noise-deformed cones)
   for (let i = 0; i < 14; i++) {
     const angle = (i / 14) * Math.PI * 2 + Math.sin(i) * 0.2;
     const radius = 48 + Math.sin(i * 1.7) * 8;
     const h = 16 + Math.sin(i * 2.3) * 10 + Math.cos(i) * 6;
     const r = 7 + Math.cos(i * 1.3) * 3;
-    const geo = new THREE.ConeGeometry(r, h, 7, 5);
+    const geo = new THREE.ConeGeometry(r, h, 10, 6);
     const posAttr = geo.attributes.position as unknown as { count: number; getXYZ: (i: number) => [number, number, number]; setXYZ: (i: number, x: number, y: number, z: number) => void };
     const v = new THREE.Vector3();
     for (let k = 0; k < posAttr.count; k++) {

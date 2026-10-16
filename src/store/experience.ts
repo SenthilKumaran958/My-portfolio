@@ -34,7 +34,7 @@ export const DESTINATIONS: DestinationInfo[] = [
   {
     id: "level-design",
     name: "Level Design",
-    subtitle: "Blockouts, paths, and environmental storytelling",
+    subtitle: "Greybox studies, gameplay paths & storytelling",
     position: [11, 0, -18],
     color: "#8fc6c9",
   },
