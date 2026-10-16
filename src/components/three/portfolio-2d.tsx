@@ -14,6 +14,7 @@ import { About } from "@/components/portfolio/about";
 import { Journal } from "@/components/portfolio/journal";
 import { Contact } from "@/components/portfolio/contact";
 import { Footer } from "@/components/portfolio/footer";
+import { AmbientBackground } from "@/components/portfolio/ambient-background";
 
 /**
  * The 2D scrolling portfolio. All content lives in the single source of
@@ -33,7 +34,8 @@ export function Portfolio2D() {
     window.scrollTo({ top: 0, behavior: "smooth" });
 
   return (
-    <div className="relative flex min-h-screen flex-col bg-background">
+    <div className="relative flex min-h-screen flex-col">
+      <AmbientBackground />
       <Nav />
       <main className="flex-1">
         <Hero />

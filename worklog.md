@@ -174,3 +174,26 @@ Stage Summary:
 - No mode select, no 3D world, no canvas, no pointer-lock — just the cinematic 2D portfolio
 - All 9 sections present including the UE5 gallery; all nav links, hero buttons, and Play Game link work
 - Lint clean; dev log clean; 0 console errors
+
+---
+Task ID: 15
+Agent: main
+Task: Add animated atmospheric background to the 2D portfolio
+
+Work Log:
+- Created src/components/portfolio/ambient-background.tsx — a fixed full-screen atmospheric layer:
+  * Slowly shifting gradient base (bgHue 32s, subtle hue-rotate + brightness)
+  * Two drifting fog bands at different speeds/directions (fogDriftA 48s, fogDriftB 64s)
+  * Pulsing moonlight glow (moonPulse 8s, opacity + scale)
+  * 18 floating ember/dust particles rising slowly with random drift (emberRise 18-40s each, randomized)
+  * Subtle twinkling starfield in the top half (twinkle 6s)
+- Added 6 keyframes to globals.css: bgHue, fogDriftA, fogDriftB, moonPulse, emberRise, twinkle
+- Respects prefers-reduced-motion (animations become static; particles disabled)
+- Mounted AmbientBackground in portfolio-2d.tsx as the first child (fixed, -z-50, behind all content)
+- Removed bg-background from the wrapper so the ambient shows through sections without their own bg image (hero keeps its own cinematic image; lower sections show the animated ambient)
+
+Stage Summary:
+- The portfolio now has a living, cinematic animated background across all sections
+- VLM verified 9/10 on lower sections: drifting fog, floating particles, moonlight glow, dark gradient, excellent readability, "moody, cinematic atmosphere that complements the Environment Art branding"
+- Performance: pure CSS animations (no per-frame JS), respects reduced-motion
+- Lint clean; no console errors; dev log clean
