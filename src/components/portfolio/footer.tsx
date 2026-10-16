@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { Github, Gamepad2, Linkedin, Mail, ArrowUp } from "lucide-react";
 import { profile } from "@/lib/portfolio-data";
 
@@ -41,9 +42,15 @@ export function Footer() {
             >
               <span
                 aria-hidden
-                className="flex size-10 items-center justify-center rounded border border-moonlight/40 text-moonlight transition-colors group-hover:bg-moonlight/10"
+                className="relative size-10 overflow-hidden rounded border border-moonlight/40 transition-colors group-hover:border-moonlight/70"
               >
-                <span className="font-display text-sm">SK</span>
+                <Image
+                  src="/images/senthil-portrait.jpeg"
+                  alt=""
+                  fill
+                  sizes="40px"
+                  className="object-cover"
+                />
               </span>
               <span className="flex flex-col leading-none text-left">
                 <span className="font-display text-base tracking-[0.2em] text-foreground">

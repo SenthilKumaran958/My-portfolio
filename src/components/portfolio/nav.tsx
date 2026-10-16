@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
@@ -75,9 +76,15 @@ export function Nav() {
         >
           <span
             aria-hidden
-            className="flex size-8 items-center justify-center rounded border border-moonlight/40 text-moonlight"
+            className="relative size-8 overflow-hidden rounded border border-moonlight/40"
           >
-            <span className="font-display text-sm">SK</span>
+            <Image
+              src="/images/senthil-portrait.jpeg"
+              alt=""
+              fill
+              sizes="32px"
+              className="object-cover"
+            />
           </span>
           <span className="hidden flex-col leading-none sm:flex">
             <span className="font-display text-sm tracking-[0.25em] text-foreground">

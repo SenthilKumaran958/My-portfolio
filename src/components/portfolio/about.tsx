@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 import { Compass, Hammer, Map } from "lucide-react";
 import { SectionHeading } from "./section-heading";
 import { about, profile } from "@/lib/portfolio-data";
@@ -43,38 +44,30 @@ export function About() {
             className="lg:col-span-5"
           >
             <div className="surface relative overflow-hidden">
-              <div className="relative aspect-[4/5] w-full bg-card">
-                {/* Atmospheric portrait placeholder */}
-                <div className="absolute inset-0 bg-gradient-to-b from-moonlight/10 via-card to-ink/60" />
+              <div className="relative aspect-[4/5] w-full overflow-hidden bg-card">
+                {/* Portrait photo */}
+                <Image
+                  src="/images/senthil-portrait.jpeg"
+                  alt="Senthil Kumaran — Game Developer and Environment Artist"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 40vw"
+                  className="object-cover"
+                />
+                {/* Atmospheric tint to blend with the dark theme */}
+                <div className="absolute inset-0 bg-gradient-to-t from-ink/70 via-transparent to-transparent" aria-hidden />
                 <div
                   aria-hidden
-                  className="absolute left-1/2 top-1/3 size-48 -translate-x-1/2 rounded-full bg-moonlight/10 blur-3xl"
+                  className="absolute inset-0 mix-blend-soft-light bg-moonlight/10"
                 />
-                <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 p-8 text-center">
-                  <span
-                    aria-hidden
-                    className="flex size-24 items-center justify-center rounded-full border border-moonlight/40 font-display text-3xl text-moonlight"
-                  >
-                    SK
-                  </span>
-                  <span className="font-display text-xl tracking-[0.15em] text-foreground">
+                {/* Name + role overlay */}
+                <div className="absolute inset-x-0 bottom-0 flex flex-col gap-1 p-6 text-left">
+                  <span className="font-display text-xl tracking-[0.15em] text-foreground drop-shadow-lg">
                     {profile.name}
                   </span>
-                  <span className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
+                  <span className="text-[10px] uppercase tracking-[0.3em] text-moonlight/80 drop-shadow-lg">
                     {profile.role}
                   </span>
-                  <p className="mt-2 max-w-xs font-serif-body text-sm italic text-muted-foreground">
-                    {profile.tagline}
-                  </p>
                 </div>
-              </div>
-              <div className="border-t border-border/70 bg-background/40 p-4">
-                <p className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
-                  Portrait placeholder — replace with your photo in
-                  <code className="mx-1 rounded bg-muted px-1.5 py-0.5 text-foreground/80">
-                    /public/images/
-                  </code>
-                </p>
               </div>
             </div>
           </motion.div>

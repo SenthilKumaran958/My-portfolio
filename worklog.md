@@ -217,3 +217,20 @@ Stage Summary:
 - Shadow Blade marked Completed
 - All bugs fixed: hydration mismatch (ambient particles), parse error (comment typo), stale placeholder handles (contact)
 - Full site verified end-to-end with no errors
+
+---
+Task ID: 17
+Agent: main
+Task: Replace "SK" placeholder initials with user's photo
+
+Work Log:
+- Copied uploaded photo "senthil kumaran photo.jpeg" (1254x1254 JPEG) to public/images/senthil-portrait.jpeg
+- Replaced About portrait placeholder (was "SK" in a circle + name/role/tagline + "Portrait placeholder" note) with a full object-cover photo + atmospheric gradient tint (from-ink/70) + moonlight soft-light blend + name/role overlay at the bottom. Removed the placeholder warning text.
+- Replaced nav logo "SK" (size-8 box) with a small circular photo (next/image, object-cover, 32px).
+- Replaced footer logo "SK" (size-10 box) with a small circular photo (next/image, object-cover, 40px).
+- Verified all 3 instances render and load (count: 3, loaded: 3). VLM confirmed: photo is properly displayed (not distorted, properly cropped, sharp), fits the professional aesthetic, appears in nav logo + About section + footer.
+
+Stage Summary:
+- All "SK" placeholder initials now replaced with the real photo
+- Nav logo, About portrait, and footer logo all show the user's photo
+- Lint clean; no console errors; no hydration issues (Image is SSR-safe)
