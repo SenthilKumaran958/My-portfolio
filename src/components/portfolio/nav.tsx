@@ -61,8 +61,8 @@ export function Nav() {
       className={cn(
         "fixed inset-x-0 top-0 z-50 transition-all duration-500",
         scrolled
-          ? "border-b border-border/60 bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60"
-          : "border-b border-transparent bg-transparent",
+          ? "border-b border-border/60 bg-background/85 backdrop-blur-xl supports-[backdrop-filter]:bg-background/65"
+          : "border-b border-transparent bg-gradient-to-b from-ink/90 via-ink/70 to-transparent backdrop-blur-sm",
       )}
     >
       <nav
@@ -76,17 +76,17 @@ export function Nav() {
         >
           <span
             aria-hidden
-            className="relative size-8 overflow-hidden rounded border border-moonlight/40"
+            className="relative size-12 shrink-0 overflow-hidden rounded-full ring-2 ring-moonlight/40 transition-shadow group-hover:ring-moonlight/70"
           >
             <Image
               src="/images/senthil-portrait.jpeg"
               alt=""
               fill
-              sizes="32px"
+              sizes="48px"
               className="object-cover"
             />
           </span>
-          <span className="hidden font-display text-sm tracking-[0.25em] text-foreground sm:inline">
+          <span className="hidden font-display text-base font-semibold tracking-[0.2em] text-foreground drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] sm:inline">
             Senthil Kumaran
           </span>
         </button>
@@ -100,10 +100,10 @@ export function Nav() {
                 <button
                   onClick={() => handleNav(link.href)}
                   className={cn(
-                    "relative px-3 py-2 text-xs uppercase tracking-[0.18em] transition-colors",
+                    "relative px-3 py-2 text-xs font-medium uppercase tracking-[0.18em] transition-colors drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]",
                     isActive
                       ? "text-moonlight"
-                      : "text-muted-foreground hover:text-foreground",
+                      : "text-foreground/80 hover:text-moonlight",
                   )}
                 >
                   {link.label}

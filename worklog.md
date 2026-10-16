@@ -249,3 +249,20 @@ Work Log:
 Stage Summary:
 - Nav and footer logos are now just photo + name (cleaner, matches the reference)
 - Lint clean; no console errors
+
+---
+Task ID: 19
+Agent: main
+Task: Make profile photo bigger + circular; fix plain-text visibility in nav
+
+Work Log:
+- Nav logo: enlarged photo from size-8 (32px) to size-12 (48px), changed rounded -> rounded-full (perfect circle) with a moonlight ring, added shrink-0 so it stays a fixed square. Name text upgraded to text-base font-semibold with a drop-shadow filter.
+- Footer logo: same upgrade (size-12, rounded-full, ring, shrink-0).
+- Fixed plain-text visibility: nav header now has a dark gradient backdrop (from-ink/90 via-ink/70 to-transparent) + backdrop-blur-sm when at the top (was fully transparent before, so text sat directly over the bright hero image). When scrolled, uses bg-background/85 backdrop-blur.
+- Brightened desktop nav links: text-muted-foreground -> text-foreground/80, hover -> text-moonlight, added drop-shadow + font-medium for legibility against the gradient backdrop.
+- VLM confirmed: profile photo is circular and a good size; name "SENTHIL KUMARAN" clearly visible and highly readable; nav links perfectly readable; excellent contrast; no visibility issues.
+
+Stage Summary:
+- Photo is now a larger perfect circle with a glowing ring in nav + footer
+- All plain text in the nav is now clearly visible against the dark gradient backdrop
+- Lint clean; no console errors

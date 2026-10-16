@@ -42,13 +42,13 @@ export function Footer() {
             >
               <span
                 aria-hidden
-                className="relative size-10 overflow-hidden rounded border border-moonlight/40 transition-colors group-hover:border-moonlight/70"
+                className="relative size-12 shrink-0 overflow-hidden rounded-full ring-2 ring-moonlight/40 transition-shadow group-hover:ring-moonlight/70"
               >
                 <Image
                   src="/images/senthil-portrait.jpeg"
                   alt=""
                   fill
-                  sizes="40px"
+                  sizes="48px"
                   className="object-cover"
                 />
               </span>
