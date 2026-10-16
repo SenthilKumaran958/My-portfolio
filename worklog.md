@@ -156,3 +156,21 @@ Stage Summary:
 - Environment substantially more detailed (statues, broken arch, rock formations, fluted pillars, rubble, moss, vines, fog, better materials/lighting)
 - HONEST LIMITATION: VLM still rates it 4/10 as "primitive low-poly" because browser-based procedural Three.js geometry (boxes/cylinders/cones) inherently reads as low-poly vs. real UE5/Blender assets, even with normal maps. The composition, lighting, and atmosphere are professional, but the geometry fidelity is the hard ceiling for procedural rendering. To reach true AAA fidelity, the user needs to export GLB models from Blender and load them — the scene is structured to accept them.
 - Full system verified: 3D enters, renders (211 colors), 2D portfolio has all 9 sections including UE5 gallery, footer sticky, Play Game button live, all links correct, no console errors, dev log clean
+
+---
+Task ID: 14
+Agent: main
+Task: Remove the 3D world — pure 2D portfolio only
+
+Work Log:
+- Rewrote src/app/page.tsx to render Portfolio2D directly (no mode select, no lazy 3D import, no Zustand mode store). Page is now a server component that immediately shows the 2D portfolio.
+- Removed the "Enter 3D" floating FAB and the PersistentNav (which had the 3D toggle) from portfolio-2d.tsx. Kept only the back-to-top button.
+- Removed framer-motion AnimatePresence for the 3D FAB (kept for back-to-top).
+- All 2D components (Hero, FeaturedProject, EnvironmentGallery, UnrealEnvironments, LevelDesign, Skills, About, Journal, Contact, Footer, Nav) unchanged and intact.
+- 3D source files (raw-three-experience, experience-3d, mode-select, hud/*) left in place but no longer imported/used — safe to delete later if desired.
+
+Stage Summary:
+- Site is now a pure 2D scrolling portfolio at /
+- No mode select, no 3D world, no canvas, no pointer-lock — just the cinematic 2D portfolio
+- All 9 sections present including the UE5 gallery; all nav links, hero buttons, and Play Game link work
+- Lint clean; dev log clean; 0 console errors
