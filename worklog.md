@@ -234,3 +234,18 @@ Stage Summary:
 - All "SK" placeholder initials now replaced with the real photo
 - Nav logo, About portrait, and footer logo all show the user's photo
 - Lint clean; no console errors; no hydration issues (Image is SSR-safe)
+
+---
+Task ID: 18
+Agent: main
+Task: Remove "Game Developer · Environment Artist" role text from nav/footer logos; keep photo + name only
+
+Work Log:
+- Nav logo: removed the "Game Developer · Environment Artist" subtitle span, now shows just the profile photo + "Senthil Kumaran" name (matches the user's reference screenshot layout)
+- Footer logo: removed the role subtitle span, now shows just the profile photo + "Senthil Kumaran" name
+- The "GAME DEVELOPER | ENVIRONMENT ARTIST" text remains in the hero section eyebrow (correct — that's the hero intro, not the nav logo)
+- Verified: nav shows "Senthil Kumaran" only, photo present, role removed. VLM confirmed "only a small profile photo and the name 'Senthil Kumaran'... no 'Game Developer / Environment Artist' subtitle in the logo/navigation bar".
+
+Stage Summary:
+- Nav and footer logos are now just photo + name (cleaner, matches the reference)
+- Lint clean; no console errors

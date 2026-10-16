@@ -56,9 +56,6 @@ export function Footer() {
                 <span className="font-display text-base tracking-[0.2em] text-foreground">
                   Senthil Kumaran
                 </span>
-                <span className="mt-1 text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
-                  {profile.role}
-                </span>
               </span>
             </button>
             <p className="mt-5 max-w-sm font-serif-body text-sm leading-relaxed text-muted-foreground">

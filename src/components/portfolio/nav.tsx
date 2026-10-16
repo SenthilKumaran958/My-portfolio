@@ -86,13 +86,8 @@ export function Nav() {
               className="object-cover"
             />
           </span>
-          <span className="hidden flex-col leading-none sm:flex">
-            <span className="font-display text-sm tracking-[0.25em] text-foreground">
-              Senthil Kumaran
-            </span>
-            <span className="mt-1 text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
-              Game Developer · Environment Artist
-            </span>
+          <span className="hidden font-display text-sm tracking-[0.25em] text-foreground sm:inline">
+            Senthil Kumaran
           </span>
         </button>
 
