@@ -14,11 +14,16 @@ import { useEffect, useMemo, useState } from "react";
  * Everything is pure CSS animation (no JS per-frame work) and respects
  * prefers-reduced-motion (animations become static). Designed to feel
  * like the portfolio is alive without distracting from the content.
+ *
+ * Particles are generated only after mount (client-only) to avoid
+ * hydration mismatches from Math.random() differing between SSR + client.
  */
 export function AmbientBackground() {
+  const [mounted, setMounted] = useState(false);
   const [reduced, setReduced] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     setReduced(mq.matches);
     const onChange = () => setReduced(mq.matches);
@@ -26,9 +31,10 @@ export function AmbientBackground() {
     return () => mq.removeEventListener?.("change", onChange);
   }, []);
 
-  // Stable random particle positions (generated once on the client)
+  // Stable random particle positions — generated ONCE on the client only,
+  // after mount, so SSR and client render the same (empty) particle set.
   const particles = useMemo(() => {
-    if (reduced) return [];
+    if (!mounted || reduced) return [];
     return Array.from({ length: 18 }, (_, i) => ({
       id: i,
       left: Math.random() * 100,
@@ -39,7 +45,7 @@ export function AmbientBackground() {
       drift: (Math.random() - 0.5) * 60,
       opacity: 0.2 + Math.random() * 0.4,
     }));
-  }, [reduced]);
+  }, [mounted, reduced]);
 
   return (
     <div

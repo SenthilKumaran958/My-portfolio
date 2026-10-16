@@ -35,10 +35,10 @@ export const featuredProject = {
   engine: "Godot 4.7",
   language: "GDScript",
   genre: "2D Action-Platformer",
-  status: "In Development",
+  status: "Completed",
   cover: "/images/shadow-blade-cover.jpg",
   overview:
-    "Shadow Blade is an original 2D action-platformer I am developing in Godot 4.7 using GDScript. It follows a lone wanderer moving through ruined, moonlit temples and forgotten caverns. The focus is on tight platforming, deliberate combat, and environmental storytelling — letting the world itself communicate what happened before the player arrived.",
+    "Shadow Blade is an original 2D action-platformer I built in Godot 4.7 using GDScript. It follows a lone wanderer moving through ruined, moonlit temples and forgotten caverns. The focus is on tight platforming, deliberate combat, and environmental storytelling — letting the world itself communicate what happened before the player arrived.",
   // Real links — Play is live on itch.io. Source and gameplay video coming soon.
   links: {
     play: { href: "https://god-arts.itch.io/shadow-blade", label: "Play Game", available: true },

@@ -18,21 +18,21 @@ export function Contact() {
   const links = [
     {
       label: "GitHub",
-      handle: "your-handle",
+      handle: "SenthilKumaran958",
       href: profile.links.github,
       icon: Github,
       available: true,
     },
     {
       label: "Itch.io",
-      handle: "your-handle",
+      handle: "god-arts",
       href: profile.links.itch,
       icon: Gamepad2,
       available: true,
     },
     {
       label: "LinkedIn",
-      handle: "your-handle",
+      handle: "senthil-kumaran",
       href: profile.links.linkedin,
       icon: Linkedin,
       available: true,

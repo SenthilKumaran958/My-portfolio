@@ -197,3 +197,23 @@ Stage Summary:
 - VLM verified 9/10 on lower sections: drifting fog, floating particles, moonlight glow, dark gradient, excellent readability, "moody, cinematic atmosphere that complements the Environment Art branding"
 - Performance: pure CSS animations (no per-frame JS), respects reduced-motion
 - Lint clean; no console errors; dev log clean
+
+---
+Task ID: 16
+Agent: main
+Task: Set Shadow Blade status to Completed + fix all bugs
+
+Work Log:
+- Updated Shadow Blade status "In Development" -> "Completed" in portfolio-data.ts
+- Updated overview text "I am developing" -> "I built" (past tense, reflecting completion)
+- Fixed hydration mismatch: AmbientBackground generated Math.random() particles during SSR which differed from client. Added `mounted` state gate so particles only generate after mount (client-only) — SSR and client now render identical (empty) particle sets.
+- Fixed stray `*` typo in ambient-background comment that caused a parse error.
+- Fixed stale "your-handle" placeholders in contact.tsx: GitHub -> SenthilKumaran958, Itch.io -> god-arts, LinkedIn -> senthil-kumaran (links were already real, only the display handles were placeholders).
+- Verified all interactions: nav links (9), mobile menu toggle, gallery filter (6->1), journal accordion + code snippets, screenshot lightbox (opens + Escape closes), Level Design before/after slider, UE5 gallery filter, contact links, Play Game button (live), hero buttons, mobile responsive (390px, h1 48px).
+- Verified all 18 images load (lazy-loaded correctly).
+- Verified: 0 console errors, 0 hydration errors, 0 parse errors, lint clean, dev log clean.
+
+Stage Summary:
+- Shadow Blade marked Completed
+- All bugs fixed: hydration mismatch (ambient particles), parse error (comment typo), stale placeholder handles (contact)
+- Full site verified end-to-end with no errors
